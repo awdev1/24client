@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilot App</title>
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            background-color: #f5f5f5;
+        }
+        main {
+            flex: 1 0 auto;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .card {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper teal">
+            <a href="#" class="brand-logo center">Pilot App</a>
+        </div>
+    </nav>
+    <main>
+        <div class="container" id="loginContainer">
+            <div class="row">
+                <div class="col s12 m6 offset-m3">
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="card-title">Login</span>
+                            <form id="loginForm">
+                                <div class="input-field">
+                                    <input id="loginUsername" type="text" required>
+                                    <label for="loginUsername">Username</label>
+                                </div>
+                                <div class="input-field">
+                                    <input id="loginPassword" type="password" required>
+                                    <label for="loginPassword">Password</label>
+                                </div>
+                                <button class="btn waves-effect waves-light" type="submit">Login
+                                    <i class="material-icons right">login</i>
+                                </button>
+                            </form>
+                        </div>
+                        <div class="card-action">
+                            <a href="#" id="showSignupForm">Don't have an account? Sign up</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" id="signupContainer" style="display: none;">
+            <div class="row">
+                <div class="col s12 m6 offset-m3">
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="card-title">Sign Up</span>
+                            <form id="signupForm">
+                                <div class="input-field">
+                                    <input id="signupUsername" type="text" required>
+                                    <label for="signupUsername">Username</label>
+                                </div>
+                                <div class="input-field">
+                                    <input id="signupPassword" type="password" required>
+                                    <label for="signupPassword">Password</label>
+                                </div>
+                                <button class="btn waves-effect waves-light" type="submit">Sign Up
+                                    <i class="material-icons right">person_add</i>
+                                </button>
+                            </form>
+                        </div>
+                        <div class="card-action">
+                            <a href="#" id="showLoginForm">Already have an account? Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" id="appContent" style="display: none;">
+            <div class="row">
+                <div class="col s12">
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="card-title">Flight Information</span>
+                            <form id="flightForm">
+                                <div class="input-field">
+                                    <input id="departure" type="text" required>
+                                    <label for="departure">Departure</label>
+                                </div>
+                                <div class="input-field">
+                                    <input id="destination" type="text" required>
+                                    <label for="destination">Destination</label>
+                                </div>
+                                <button class="btn waves-effect waves-light" type="submit">Add Flight
+                                    <i class="material-icons right">flight_takeoff</i>
+                                </button>
+                            </form>
+                        </div>
+                        <div class="card-action">
+                            <h6>Flight Info</h6>
+                            <div id="flightInfo"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s12">
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="card-title">Chat</span>
+                            <form id="chatForm">
+                                <div class="input-field">
+                                    <input id="message" type="text" required>
+                                    <label for="message">Enter message</label>
+                                </div>
+                                <button class="btn waves-effect waves-light" type="submit">Send
+                                    <i class="material-icons right">send</i>
+                                </button>
+                            </form>
+                        </div>
+                        <div class="card-action">
+                            <h6>Messages</h6>
+                            <div id="messages"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="page-footer teal">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">Pilot App</h5>
+                    <p class="grey-text text-lighten-4">A modern interface for pilots to share flight information and chat.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- jQuery and Materialize JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginContainer = document.getElementById('loginContainer');
+            const signupContainer = document.getElementById('signupContainer');
+            const appContent = document.getElementById('appContent');
+
+            document.getElementById('showSignupForm').addEventListener('click', () => {
+                loginContainer.style.display = 'none';
+                signupContainer.style.display = 'block';
+            });
+
+            document.getElementById('showLoginForm').addEventListener('click', () => {
+                signupContainer.style.display = 'none';
+                loginContainer.style.display = 'block';
+            });
+
+            // Handle Signup
+            document.getElementById('signupForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const username = document.getElementById('signupUsername').value;
+                const password = document.getElementById('signupPassword').value;
+                const response = await fetch('http://localhost:3000/api/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    Swal.fire('Success', 'Signup successful. Please login.', 'success').then(() => {
+                        signupContainer.style.display = 'none';
+                        loginContainer.style.display = 'block';
+                    });
+                } else {
+                    Swal.fire('Error', data.message, 'error');
+                }
+            });
+
+            // Handle Login
+            document.getElementById('loginForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
+                const response = await fetch('http://localhost:3000/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    localStorage.setItem('username', username);
+                    loginContainer.style.display = 'none';
+                    appContent.style.display = 'block';
+                    loadInitialData();
+                } else {
+                    Swal.fire('Error', data.message, 'error');
+                }
+            });
+
+            async function loadInitialData() {
+                const flightResponse = await fetch('http://localhost:3000/api/flights');
+                const flights = await flightResponse.json();
+                flights.forEach(flight => {
+                    const info = `<p><strong>${flight.username}</strong> - Departure: ${flight.departure}, Destination: ${flight.destination} <small>${new Date(flight.timestamp).toLocaleString()}</small></p>`;
+                    document.getElementById('flightInfo').insertAdjacentHTML('beforeend', info);
+                });
+
+                const messageResponse = await fetch('http://localhost:3000/api/messages');
+                const messages = await messageResponse.json();
+                messages.forEach(message => {
+                    const msg = `<p><strong>${message.username}</strong>: ${message.message} <small>${new Date(message.timestamp).toLocaleString()}</small></p>`;
+                    document.getElementById('messages').insertAdjacentHTML('beforeend', msg);
+                });
+            }
+
+            // Flight Information
+            document.getElementById('flightForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const departure = document.getElementById('departure').value;
+                const destination = document.getElementById('destination').value;
+                const username = localStorage.getItem('username');
+                const response = await fetch('http://localhost:3000/api/flights', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, departure, destination })
+                });
+                const data = await response.json();
+                const info = `<p><strong>${data.username}</strong> - Departure: ${data.departure}, Destination: ${data.destination} <small>${new Date(data.timestamp).toLocaleString()}</small></p>`;
+                document.getElementById('flightInfo').insertAdjacentHTML('beforeend', info);
+                event.target.reset();
+            });
+
+            // Chat
+            document.getElementById('chatForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const message = document.getElementById('message').value;
+                const username = localStorage.getItem('username');
+                const response = await fetch('http://localhost:3000/api/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, message })
+                });
+                const data = await response.json();
+                if (data.error) {
+                    Swal.fire('Error', data.error, 'error');
+                } else {
+                    const msg = `<p><strong>${data.username}</strong>: ${data.message} <small>${new Date(data.timestamp).toLocaleString()}</small></p>`;
+                    document.getElementById('messages').insertAdjacentHTML('beforeend', msg);
+                }
+                event.target.reset();
+            });
+        });
+    </script>
+</body>
+</html>
