@@ -5,12 +5,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to fetch server URL
     async function getServerUrl() {
         try {
-            const response = await fetch('https://raw.githubusercontent.com/awdev1/24client/main/backend', {
-                method: 'GET',
-                headers: {
-                    'Cache-Control': 'no-cache' // tell browser nuh uh
-                }
-            });
+            const url = 'https://raw.githubusercontent.com/awdev1/24client/main/backend';
+            const cacheBuster = `?cb=${new Date().getTime()}`;
+            const response = await fetch(url + cacheBuster);
             if (!response.ok) {
                 throw new Error('Network response was not okay');
             }
