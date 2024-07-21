@@ -2,30 +2,24 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initialize Materialize components
     M.AutoInit();
 
-    // Function to fetch server URL
-    async function getServerUrl() {
+    const fetchServerUrl = async () => {
         try {
-            const response = await fetch('https://raw.githubusercontent.com/awdev1/24client/main/backend');
-            if (!response.ok) {
-                throw new Error('Network response was nuh uh');
-            }
-            // const serverUrl = await response.text();
-            const serverUrl = "https://hgokqv-ip-136-52-13-12.tunnelmole.net"
-            return serverUrl.trim(); // Trim any extra whitespace
+            // Fetch the server URL from the raw GitHub file with no cache
+            const response = await fetch('https://raw.githubusercontent.com/awdev1/24client/main/backend', {
+                headers: {
+                    'Cache-Control': 'no-cache' // telll browser nuh uh
+                }
+            });
+            const data = await response.text();
+            return data.trim(); // Trim to remove any extra whitespace or newlines
         } catch (error) {
-            console.error('Failed to fetch server URL:', error);
-            return null; // Handle the case where URL couldn't be fetched
+            console.error('Error fetching server URL:', error);
+            return null // Default URL on error
         }
-    }
+    };
 
-    // Fetch server URL
-    (async function() {
-        const serverUrl = await getServerUrl();
-        if (!serverUrl) {
-            console.error('Server URL could not be fetched.');
-            return;
-        }
-
+    const initialize = async () => {
+        const serverUrl = await fetchServerUrl();
         const loginContainer = document.getElementById('loginContainer');
         const signupContainer = document.getElementById('signupContainer');
         const appContent = document.getElementById('appContent');
@@ -54,22 +48,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
             try {
                 // Fetch recent messages
-                const messagesResponse = await fetch(`${serverUrl}/api/messages`);
+                const messagesResponse = await fetch(`${serverUrl}/api/messages`, {
+                    headers: {
+                        'Cache-Control': 'no-cache'
+                    }
+                });
                 const messagesData = await messagesResponse.json();
                 messagesDiv.innerHTML = '<h6>Messages</h6>' + messagesData.map(msg => `<p>${msg.username}: ${msg.message}</p>`).join('');
 
                 // Fetch flights
-                const flightsResponse = await fetch(`${serverUrl}/api/flights/${currentUsername}`);
+                const flightsResponse = await fetch(`${serverUrl}/api/flights/${currentUsername}`, {
+                    headers: {
+                        'Cache-Control': 'no-cache'
+                    }
+                });
                 const flightsData = await flightsResponse.json();
                 flightInfoDiv.innerHTML = '<h6>Flight Info</h6>' + flightsData.map(flight => `<p>${flight.departure} to ${flight.destination}</p>`).join('');
 
                 // Fetch friends
-                const friendsResponse = await fetch(`${serverUrl}/api/friends/${currentUsername}`);
+                const friendsResponse = await fetch(`${serverUrl}/api/friends/${currentUsername}`, {
+                    headers: {
+                        'Cache-Control': 'no-cache'
+                    }
+                });
                 const friendsData = await friendsResponse.json();
                 friendsListDiv.innerHTML = '<h6>Your Friends</h6>' + friendsData.friends.map(friend => `<p>${friend}</p>`).join('');
 
                 // Fetch friends' flights
-                const friendsFlightsResponse = await fetch(`${serverUrl}/api/flights/${currentUsername}`);
+                const friendsFlightsResponse = await fetch(`${serverUrl}/api/flights/${currentUsername}`, {
+                    headers: {
+                        'Cache-Control': 'no-cache'
+                    }
+                });
                 const friendsFlightsData = await friendsFlightsResponse.json();
                 friendsFlightsDiv.innerHTML = '<h6>Friends\' Flights</h6>' + friendsFlightsData.map(flight => `<p>${flight.departure} to ${flight.destination}</p>`).join('');
             } catch (error) {
@@ -89,7 +99,10 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 const response = await fetch(`${serverUrl}/api/login`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    },
                     body: JSON.stringify({ username, password })
                 });
                 const result = await response.json();
@@ -114,7 +127,10 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 const response = await fetch(`${serverUrl}/api/signup`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    },
                     body: JSON.stringify({ username, password })
                 });
                 const result = await response.json();
@@ -137,7 +153,10 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 const response = await fetch(`${serverUrl}/api/flights`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    },
                     body: JSON.stringify({ username: currentUsername, departure, destination })
                 });
                 const result = await response.json();
@@ -160,7 +179,10 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 const response = await fetch(`${serverUrl}/api/messages`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    },
                     body: JSON.stringify({ username: currentUsername, message })
                 });
                 const result = await response.json();
@@ -182,7 +204,10 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 const response = await fetch(`${serverUrl}/api/friends`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    },
                     body: JSON.stringify({ username: currentUsername, friendUsername })
                 });
                 const result = await response.json();
@@ -200,7 +225,12 @@ document.addEventListener('DOMContentLoaded', function () {
         // Clear Flights
         document.getElementById('clearFlights').addEventListener('click', async () => {
             try {
-                const response = await fetch(`${serverUrl}/api/flights`, { method: 'DELETE' });
+                const response = await fetch(`${serverUrl}/api/flights`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Cache-Control': 'no-cache'
+                    }
+                });
                 const result = await response.json();
                 if (response.ok) {
                     fetchUpdates(); // Refresh flights
@@ -217,5 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.body.classList.toggle('dark-theme');
             document.body.classList.toggle('light-theme');
         });
-    })();
+    };
+
+    initialize(); // Start the initialization process
 });
