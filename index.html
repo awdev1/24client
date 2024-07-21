@@ -160,36 +160,43 @@
             const signupContainer = document.getElementById('signupContainer');
             const appContent = document.getElementById('appContent');
 
-            document.getElementById('showSignupForm').addEventListener('click', () => {
-                loginContainer.style.display = 'none';
-                signupContainer.style.display = 'block';
-            });
+            const serverUrl = 'https://q5ayw9-ip-136-52-13-12.tunnelmole.net'; // Replace with your backend server URL
 
-            document.getElementById('showLoginForm').addEventListener('click', () => {
-                signupContainer.style.display = 'none';
-                loginContainer.style.display = 'block';
-            });
+            // Function to handle API requests
+            async function apiRequest(endpoint, method = 'GET', body = null) {
+                try {
+                    const response = await fetch(`${serverUrl}${endpoint}`, {
+                        method: method,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: body ? JSON.stringify(body) : null
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return await response.json();
+                } catch (error) {
+                    console.error('Error with API request:', error);
+                    Swal.fire('Error', 'An error occurred while making the request', 'error');
+                    return null;
+                }
+            }
 
             // Handle Signup
             document.getElementById('signupForm').addEventListener('submit', async (event) => {
                 event.preventDefault();
                 const username = document.getElementById('signupUsername').value;
                 const password = document.getElementById('signupPassword').value;
-                const response = await fetch('http://localhost:3000/api/signup', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, password })
-                });
-                const data = await response.json();
-                if (data.success) {
+                const data = await apiRequest('/api/signup', 'POST', { username, password });
+                if (data && data.success) {
                     Swal.fire('Success', 'Signup successful. Please login.', 'success').then(() => {
                         signupContainer.style.display = 'none';
                         loginContainer.style.display = 'block';
                     });
                 } else {
-                    Swal.fire('Error', data.message, 'error');
+                    Swal.fire('Error', data.message || 'Signup failed', 'error');
                 }
             });
 
@@ -198,80 +205,91 @@
                 event.preventDefault();
                 const username = document.getElementById('loginUsername').value;
                 const password = document.getElementById('loginPassword').value;
-                const response = await fetch('http://localhost:3000/api/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, password })
-                });
-                const data = await response.json();
-                if (data.success) {
+                const data = await apiRequest('/api/login', 'POST', { username, password });
+                if (data && data.success) {
                     localStorage.setItem('username', username);
                     loginContainer.style.display = 'none';
                     appContent.style.display = 'block';
                     loadInitialData();
                 } else {
-                    Swal.fire('Error', data.message, 'error');
+                    Swal.fire('Error', data.message || 'Login failed', 'error');
                 }
             });
 
-            async function loadInitialData() {
-                const flightResponse = await fetch('http://localhost:3000/api/flights');
-                const flights = await flightResponse.json();
-                flights.forEach(flight => {
-                    const info = `<p><strong>${flight.username}</strong> - Departure: ${flight.departure}, Destination: ${flight.destination} <small>${new Date(flight.timestamp).toLocaleString()}</small></p>`;
-                    document.getElementById('flightInfo').insertAdjacentHTML('beforeend', info);
-                });
+            // Show Signup Form
+            document.getElementById('showSignupForm').addEventListener('click', (event) => {
+                event.preventDefault();
+                loginContainer.style.display = 'none';
+                signupContainer.style.display = 'block';
+            });
 
-                const messageResponse = await fetch('http://localhost:3000/api/messages');
-                const messages = await messageResponse.json();
-                messages.forEach(message => {
-                    const msg = `<p><strong>${message.username}</strong>: ${message.message} <small>${new Date(message.timestamp).toLocaleString()}</small></p>`;
-                    document.getElementById('messages').insertAdjacentHTML('beforeend', msg);
-                });
-            }
+            // Show Login Form
+            document.getElementById('showLoginForm').addEventListener('click', (event) => {
+                event.preventDefault();
+                signupContainer.style.display = 'none';
+                loginContainer.style.display = 'block';
+            });
 
-            // Flight Information
+            // Handle Flight Form Submission
             document.getElementById('flightForm').addEventListener('submit', async (event) => {
                 event.preventDefault();
+                const username = localStorage.getItem('username');
                 const departure = document.getElementById('departure').value;
                 const destination = document.getElementById('destination').value;
-                const username = localStorage.getItem('username');
-                const response = await fetch('http://localhost:3000/api/flights', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, departure, destination })
-                });
-                const data = await response.json();
-                const info = `<p><strong>${data.username}</strong> - Departure: ${data.departure}, Destination: ${data.destination} <small>${new Date(data.timestamp).toLocaleString()}</small></p>`;
-                document.getElementById('flightInfo').insertAdjacentHTML('beforeend', info);
-                event.target.reset();
+                const data = await apiRequest('/api/flights', 'POST', { username, departure, destination });
+                if (data) {
+                    Swal.fire('Success', 'Flight added successfully', 'success');
+                    loadFlightInfo();
+                } else {
+                    Swal.fire('Error', 'Failed to add flight', 'error');
+                }
             });
 
-            // Chat
+            // Handle Chat Form Submission
             document.getElementById('chatForm').addEventListener('submit', async (event) => {
                 event.preventDefault();
-                const message = document.getElementById('message').value;
                 const username = localStorage.getItem('username');
-                const response = await fetch('http://localhost:3000/api/messages', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, message })
-                });
-                const data = await response.json();
-                if (data.error) {
-                    Swal.fire('Error', data.error, 'error');
-                } else {
-                    const msg = `<p><strong>${data.username}</strong>: ${data.message} <small>${new Date(data.timestamp).toLocaleString()}</small></p>`;
-                    document.getElementById('messages').insertAdjacentHTML('beforeend', msg);
+                const message = document.getElementById('message').value;
+                if (message.includes('badword')) {
+                    Swal.fire('Error', 'Profanity is not allowed!', 'error');
+                    return;
                 }
-                event.target.reset();
+                const data = await apiRequest('/api/messages', 'POST', { username, message });
+                if (data) {
+                    Swal.fire('Success', 'Message sent', 'success');
+                    loadMessages();
+                } else {
+                    Swal.fire('Error', 'Failed to send message', 'error');
+                }
             });
+
+            // Load initial data for flights and messages
+            async function loadInitialData() {
+                await loadFlightInfo();
+                await loadMessages();
+            }
+
+            // Load flight information
+            async function loadFlightInfo() {
+                const data = await apiRequest('/api/flights');
+                if (data) {
+                    const flightInfoDiv = document.getElementById('flightInfo');
+                    flightInfoDiv.innerHTML = data.map(flight => 
+                        `<p><strong>Departure:</strong> ${flight.departure} <strong>Destination:</strong> ${flight.destination}</p>`
+                    ).join('');
+                }
+            }
+
+            // Load messages
+            async function loadMessages() {
+                const data = await apiRequest('/api/messages');
+                if (data) {
+                    const messagesDiv = document.getElementById('messages');
+                    messagesDiv.innerHTML = data.map(msg => 
+                        `<p><strong>${msg.username}:</strong> ${msg.message}</p>`
+                    ).join('');
+                }
+            }
         });
     </script>
 </body>
