@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!response.ok) {
                 throw new Error('Network response was nuh uh');
             }
-            const serverUrl = await response.text();
+            // const serverUrl = await response.text();
+            const serverUrl = "https://hgokqv-ip-136-52-13-12.tunnelmole.net"
             return serverUrl.trim(); // Trim any extra whitespace
         } catch (error) {
             console.error('Failed to fetch server URL:', error);
