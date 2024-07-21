@@ -16,73 +16,17 @@
 <body class="light-theme">
     <nav>
         <div class="nav-wrapper teal">
-            <a href="#" class="brand-logo center">Pilot App</a>
+            <a href="#" class="brand-logo center">24Pilot</a>
             <a href="#" class="theme-toggle btn waves-effect waves-light" id="themeToggle">Toggle Theme</a>
         </div>
     </nav>
     <main>
-        <!-- Login and Signup Sections -->
-        <div class="container" id="loginContainer">
-            <div class="row">
-                <div class="col s12 m6 offset-m3">
-                    <div class="card">
-                        <div class="card-content">
-                            <span class="card-title">Login</span>
-                            <form id="loginForm">
-                                <div class="input-field">
-                                    <input id="loginUsername" type="text" required>
-                                    <label for="loginUsername">Username</label>
-                                </div>
-                                <div class="input-field">
-                                    <input id="loginPassword" type="password" required>
-                                    <label for="loginPassword">Password</label>
-                                </div>
-                                <button class="btn waves-effect waves-light" type="submit">Login
-                                    <i class="material-icons right">login</i>
-                                </button>
-                            </form>
-                        </div>
-                        <div class="card-action">
-                            <a href="#" id="showSignupForm">Don't have an account? Sign up</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="container" id="signupContainer" style="display: none;">
-            <div class="row">
-                <div class="col s12 m6 offset-m3">
-                    <div class="card">
-                        <div class="card-content">
-                            <span class="card-title">Sign Up</span>
-                            <form id="signupForm">
-                                <div class="input-field">
-                                    <input id="signupUsername" type="text" required>
-                                    <label for="signupUsername">Username</label>
-                                </div>
-                                <div class="input-field">
-                                    <input id="signupPassword" type="password" required>
-                                    <label for="signupPassword">Password</label>
-                                </div>
-                                <button class="btn waves-effect waves-light" type="submit">Sign Up
-                                    <i class="material-icons right">person_add</i>
-                                </button>
-                            </form>
-                        </div>
-                        <div class="card-action">
-                            <a href="#" id="showLoginForm">Already have an account? Login</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Main App Content -->
         <div class="container" id="appContent" style="display: none;">
-            <!-- Flight Information Section -->
+            <!-- Grid Container -->
             <div class="row">
-                <div class="col s12">
+                <!-- Flight Information Section -->
+                <div class="col s12 m6">
                     <div class="card">
                         <div class="card-content">
                             <span class="card-title">Flight Information</span>
@@ -106,11 +50,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Chat Section -->
-            <div class="row">
-                <div class="col s12">
+                <!-- Chat Section -->
+                <div class="col s12 m6">
                     <div class="card">
                         <div class="card-content">
                             <span class="card-title">Chat</span>
@@ -125,7 +67,6 @@
                             </form>
                         </div>
                         <div class="card-action">
-                            <h6>Messages</h6>
                             <div id="messages"></div>
                         </div>
                     </div>
@@ -156,13 +97,71 @@
                 </div>
             </div>
         </div>
+
+        <!-- Login Section -->
+        <div class="container" id="loginContainer">
+            <div class="row">
+                <div class="col s12 m6 l4 offset-l4">
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="card-title">Login</span>
+                            <form id="loginForm">
+                                <div class="input-field">
+                                    <input id="loginUsername" type="text" required>
+                                    <label for="loginUsername">Username</label>
+                                </div>
+                                <div class="input-field">
+                                    <input id="loginPassword" type="password" required>
+                                    <label for="loginPassword">Password</label>
+                                </div>
+                                <button class="btn waves-effect waves-light" type="submit">Login
+                                    <i class="material-icons right">login</i>
+                                </button>
+                            </form>
+                        </div>
+                        <div class="card-action">
+                            <a href="#" id="showSignupForm">Don't have an account? Sign up</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Signup Section -->
+        <div class="container" id="signupContainer" style="display: none;">
+            <div class="row">
+                <div class="col s12 m6 l4 offset-l4">
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="card-title">Sign Up</span>
+                            <form id="signupForm">
+                                <div class="input-field">
+                                    <input id="signupUsername" type="text" required>
+                                    <label for="signupUsername">Username</label>
+                                </div>
+                                <div class="input-field">
+                                    <input id="signupPassword" type="password" required>
+                                    <label for="signupPassword">Password</label>
+                                </div>
+                                <button class="btn waves-effect waves-light" type="submit">Sign Up
+                                    <i class="material-icons right">person_add</i>
+                                </button>
+                            </form>
+                        </div>
+                        <div class="card-action">
+                            <a href="#" id="showLoginForm">Already have an account? Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
     <footer class="page-footer teal">
         <div class="container">
             <div class="row">
                 <div class="col l6 s12">
-                    <h5 class="white-text">Pilot App</h5>
-                    <p class="grey-text text-lighten-4">A modern interface for pilots to share flight information and chat.</p>
+                    <h5 class="white-text">24Pilot</h5>
+                    <p class="grey-text text-lighten-4">A totally responsive and modern interface for people to look at.</p>
                 </div>
             </div>
         </div>
